@@ -34,7 +34,6 @@ func unpair(str string) Pair {
 
 func AdbGet(c *gin.Context) {
 	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/su", "-c", "getprop|grep service.adb.tcp.port")
-	// 多返回值
 	result, err := cmd.Output()
 	if err != nil {
 		fmt.Println(err)
@@ -68,33 +67,10 @@ func AdbPost(c *gin.Context) {
 	}
 	command += " && stop adbd && start adbd"
 	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/su", "-c", command)
-	// 多返回值
 	_, err = cmd.Output()
 	if err != nil {
 		panic(err)
 		return
 	}
 	AdbGet(c)
-
-	//c.JSON(http.StatusOK, Response{
-	//	Code:    http.StatusOK,
-	//	Message: "Success",
-	//	Data:    json,
-	//})
-	//var whoami []byte
-	//var err error
-	//var cmd *exec.Cmd
-	//
-	//// 执行单个shell命令时, 直接运行即可
-	//cmd = exec.Command("/data/data/com.termux/files/usr/bin/su", "-c", "/data/data/com.termux/files/usr/bin/getprop")
-	//if whoami, err = cmd.Output(); err != nil {
-	//	fmt.Println(err)
-	//	os.Exit(1)
-	//}
-	//// 默认输出有一个换行
-	//fmt.Println(string(whoami))
-	//// 指定参数后过滤换行符
-	//fmt.Println(strings.Trim(string(whoami), "\n"))
-	//
-	//fmt.Println("====")
 }

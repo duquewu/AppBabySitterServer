@@ -18,7 +18,7 @@ func ExeCommandPost(c *gin.Context) {
 		return
 	}
 	log.Printf("%v", &commandDTO)
-	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/su", "-c", commandDTO.Command)
+	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/sh", "-c", commandDTO.Command)
 	result, err := cmd.Output()
 	if err != nil {
 		panic(err)

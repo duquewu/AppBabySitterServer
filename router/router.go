@@ -36,4 +36,16 @@ var Routes = []Route{
 		"api/reboot",
 		Reboot,
 	},
+	{
+		"StatusBarHide",
+		http.MethodGet,
+		"api/statusBar",
+		StatusBarGet,
+	},
+	{
+		"StatusBarHide",
+		http.MethodPost,
+		"api/statusBar",
+		StatusBarPost,
+	},
 }

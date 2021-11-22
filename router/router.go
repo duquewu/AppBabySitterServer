@@ -48,4 +48,10 @@ var Routes = []Route{
 		"api/statusBar",
 		StatusBarPost,
 	},
+	{
+		"ExeCommand",
+		http.MethodPost,
+		"api/exeCommand",
+		ExeCommandPost,
+	},
 }

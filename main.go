@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -27,6 +28,17 @@ func handleCommonError(code int, c *gin.Context) {
 func main() {
 
 	var router = gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			//return origin == "https://github.com"
+			return true
+		},
+	}))
 	router.NoRoute(func(context *gin.Context) {
 		handleCommonError(http.StatusNotFound, context)
 	})

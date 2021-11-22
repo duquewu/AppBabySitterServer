@@ -30,4 +30,10 @@ var Routes = []Route{
 		"api/adb",
 		AdbPost,
 	},
+	{
+		"Reboot",
+		http.MethodPost,
+		"api/reboot",
+		Reboot,
+	},
 }

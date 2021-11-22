@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os/exec"
 	"strings"
+	"unsafe"
 )
 
 type Pair struct {
@@ -15,11 +16,17 @@ type Pair struct {
 }
 
 func unpair(str string) Pair {
+	if str == "" {
+		return Pair{}
+	}
 	fmt.Println("prepare unpair: " + str)
 	str = strings.Trim(str, "\n")
 	fmt.Println("trimmed: " + str)
 	result := strings.Split(str, "]: [")
 	fmt.Println(result)
+	if len(result) <= 1 {
+		return Pair{}
+	}
 	result[0] = strings.Replace(result[0], "[", "", -1)
 	fmt.Println(result[0])
 	result[1] = strings.Replace(result[1], "]", "", -1)
@@ -32,18 +39,29 @@ func unpair(str string) Pair {
 	}
 }
 
+type Data struct {
+	Info      Pair `json:"info,omitempty"`
+	IsEnabled bool `json:"isEnabled"`
+}
+
 func AdbGet(c *gin.Context) {
-	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/su", "-c", "getprop|grep service.adb.tcp.port")
+	var cmd = exec.Command("/data/data/com.termux/files/usr/bin/sh", "-c", "getprop|grep service.adb.tcp.port")
 	result, err := cmd.Output()
-	if err != nil {
-		fmt.Println(err)
+	// ExitCode 1 represent for grep not match, ignore this directly
+	if err != nil && cmd.ProcessState.ExitCode() != 1 {
 		panic(err)
 		return
 	}
+	var keyValue = string(result)
+	fmt.Printf("%s,%d\n", keyValue, unsafe.Sizeof(keyValue))
+	var pair = unpair(keyValue)
 	c.JSON(http.StatusOK, Response{
 		Code:    200,
 		Message: "success",
-		Data:    unpair(string(result)),
+		Data: Data{
+			IsEnabled: pair.Value == "5555",
+			Info:      pair,
+		},
 	})
 }
 
